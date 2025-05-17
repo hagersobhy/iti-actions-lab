@@ -1,24 +1,25 @@
-name: Lab 6 - Parse Employee JSON
+name: Lab 6 - JSON Input
 
 on:
   workflow_dispatch:
     inputs:
       json_input:
-        description: "Enter employee JSON data"
+        description: 'JSON input'
         required: true
-        default: "{\"id\": 101, \"name\": \"Sara\", \"department\": \"IT\", \"isManager\": true}"
+        default: '{"name": "Alice", "age": 25}'
 
 jobs:
   parse_json:
     runs-on: ubuntu-latest
     steps:
-      - name: Show Raw Input
-        run: echo "Input JSON: ${{ github.event.inputs.json_input }}"
+      - name: Parse JSON Input
+        id: parse
+        run: |
+          echo '${{ toJSON(github.event.inputs.json_input) }}' > raw.json
+          echo "::set-output name=data::$(echo '${{ github.event.inputs.json_input }}' | jq '.')"
 
-      - name: Use jq to Parse JSON
+      - name: Use fromJSON
         run: |
           DATA=$(echo '${{ github.event.inputs.json_input }}' | jq -c '.')
-          echo "Parsed ID: $(echo "$DATA" | jq -r '.id')"
-          echo "Parsed Name: $(echo "$DATA" | jq -r '.name')"
-          echo "Parsed Department: $(echo "$DATA" | jq -r '.department')"
-          echo "Is Manager?: $(echo "$DATA" | jq -r '.isManager')"
+          echo "Parsed name: $(echo "$DATA" | jq -r '.name')"
+          echo "Parsed age: $(echo "$DATA" | jq -r '.age')"
