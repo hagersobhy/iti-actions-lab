@@ -6,7 +6,7 @@ on:
       json_input:
         description: "Enter employee JSON data"
         required: true
-        default: '{"id": 101, "name": "Sara", "department": "IT", "isManager": true}'
+        default: "{\"id\": 101, \"name\": \"Sara\", \"department\": \"IT\", \"isManager\": true}"
 
 jobs:
   parse_json:
